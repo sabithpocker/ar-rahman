@@ -1,0 +1,74 @@
+<html>
+
+<head>
+    <title>AR Rahman</title>
+</head>
+
+<body>
+    <h2>AR-Rahman</h2>
+    <input type="file" onchange="previewFile()"><br>
+<img src="" height="200" alt="Image preview...">
+    <span <ul id="results"></ul>
+<script type="text/javascript" src="https://sdk.clarifai.com/js/clarifai-latest.js"></script>
+<script>
+  var app = new Clarifai.App(
+    'DFgMzmmiwr9VJIQtnNKI5DbEjSFnqBNjyTgEPcNI',
+    'j5x9zLgm32JvmgmNrzfNEKw-bvPeLq8DTIZUnPH_'
+  );
+  // predict the contents of an image by passing in a url
+  	function predict64Image(b64){
+		app.models.predict(Clarifai.GENERAL_MODEL, {base64: b64}).then(
+		  function(response) {
+		    console.log("here", response);
+		    printOutput(response);
+		    c = response;
+		  },
+		  function(err) {
+		    console.error(err);
+		  }
+		);
+	}
+
+	function printOutput(response){
+		var outputs = response.outputs;
+		var ul = document.getElementById('results');
+		while (ul.firstChild) {
+		    ul.removeChild(ul.firstChild);
+		}
+
+		outputs.forEach(function(i){
+			i.data.concepts.forEach(function(j){
+				addItem(j.name);
+			})
+		})
+
+	}
+
+	function addItem( itemName ){
+		var li = document.createElement('li');
+		var ul = document.getElementById('results');
+		li.appendChild(document.createTextNode(itemName));
+		results.appendChild(li);
+
+	}
+	 function stripResult(result){
+	 	return result.split(',')[1];
+	 }
+	function previewFile() {
+		  var preview = document.querySelector('img');
+		  var file    = document.querySelector('input[type=file]').files[0];
+		  var reader  = new FileReader();
+
+		  reader.addEventListener("load", function () {
+		    preview.src = reader.result;
+		    predict64Image(stripResult(reader.result));
+
+		  }, false);
+
+		  if (file) {
+		    reader.readAsDataURL(file);
+		  }
+		}
+</script>
+</body>
+</html>
