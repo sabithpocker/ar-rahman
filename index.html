@@ -2,14 +2,65 @@
 
 <head>
     <title>AR Rahman</title>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/pure-min.css" integrity="sha384-UQiGfs9ICog+LwheBSRCt1o5cbyKIHbwjWscjemyBMT9YCUMZffs6UqUTd0hObXD" crossorigin="anonymous">
 </head>
 
 <body>
+	<div id="content">
     <h2>AR-Rahman</h2>
-    <input type="file" onchange="previewFile()"><br>
-<img src="" height="200" alt="Image preview...">
-    <span <ul id="results"></ul>
+    <ul id="results"></ul>
+    <div id="upload-wrapper"><input type="file" onchange="previewFile()" class="pure-button pure-input-1-2 pure-button-primary"></div>
+</div>
+<img id="preview" src="" alt="">
+    
 <script type="text/javascript" src="https://sdk.clarifai.com/js/clarifai-latest.js"></script>
+<style>
+body{
+	margin:0;
+	padding:0;
+
+}
+#preview{
+
+	max-width: 100%;
+    max-height: 100%;
+}
+#content{
+	position: absolute;
+	top:0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width:100%;
+	z-index:999;
+}
+h2{
+    margin: 0;
+    background: rgba(103, 192, 226, 0.55);
+    padding: 15px 0;
+    color: rgba(20, 21, 21, 0.9);
+    text-align: center;
+}
+.pure-button {
+width: 100%;
+    font-size: 3em;
+    position: fixed;
+    bottom: 0;
+    }
+ ul{
+ 	list-style:none;
+ }
+ul > li {
+    font-size: 1.2em;
+    margin: 3px;
+    color: #eeeff3;
+    padding: 3px;
+    background: rgba(18, 159, 234, 0.55);
+    border-radius: 5px;
+    display: inline-block;
+    border: 1px solid rgba(162, 218, 192, 0.59);
+}
+</style>
 <script>
   var app = new Clarifai.App(
     'DFgMzmmiwr9VJIQtnNKI5DbEjSFnqBNjyTgEPcNI',
@@ -35,7 +86,6 @@
 		while (ul.firstChild) {
 		    ul.removeChild(ul.firstChild);
 		}
-
 		outputs.forEach(function(i){
 			i.data.concepts.forEach(function(j){
 				addItem(j.name);
@@ -58,6 +108,12 @@
 		  var preview = document.querySelector('img');
 		  var file    = document.querySelector('input[type=file]').files[0];
 		  var reader  = new FileReader();
+		  //loading
+		  		var ul = document.getElementById('results');
+				while (ul.firstChild) {
+				    ul.removeChild(ul.firstChild);
+				}
+				addItem('Loading...');
 
 		  reader.addEventListener("load", function () {
 		    preview.src = reader.result;
